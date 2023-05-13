@@ -1,0 +1,235 @@
+<mat-toolbar>
+    <button mat-icon-button disabled>
+        <img src="../../assets/icon/icon.png" alt="">
+        <span style="color: black;">&nbsp;Kanban Tool</span>
+        &nbsp;
+        &nbsp;
+        <span class="border p-2"> {{userType}}</span>
+        &nbsp;
+    </button>
+    <span class="spacer"></span>
+
+    <button mat-button [matMenuTriggerFor]="menu">
+        <mat-icon>account_circle</mat-icon>{{userName}}
+    </button>
+    <mat-menu #menu>
+        <button mat-menu-item (click)="logoutUser()">Logout</button>
+    </mat-menu>
+</mat-toolbar>
+<div class="container-fluid">
+    <br>
+    <div class="row px-3">
+        <div class=" col-md-12">
+            <mat-toolbar class="title-card">
+                <div class="project-select">
+                    <mat-label>Project</mat-label>
+                    <mat-select class="p-3" [(value)]="selectedProject" (selectionChange)="updateToCurrentProject()">
+                        <mat-option style="font-size: 15px;" [value]="project.id" *ngFor="let project of projectList">
+                            {{project.title}}
+                        </mat-option>
+                    </mat-select>
+                    <button *ngIf="userType!='DEV'" mat-raised-button
+                        (click)="openProjectDialog()"><mat-icon>add</mat-icon>
+                        New Project</button>
+                </div>
+                <span class="spacer"></span>
+                <button *ngIf="userType!='DEV'" mat-raised-button color="primary"
+                    (click)="openAddTaskDialog()"><mat-icon>add</mat-icon>New
+                    Task</button>
+            </mat-toolbar>
+        </div>
+    </div>
+    <br>
+    <div class="row px-4">
+
+        <!-- Todo tasks -->
+        <div class="col-lg-4">
+            <div class="list-header">
+                <span>
+                    <span class="display-6">To do&nbsp;</span>
+                    <div style="height: 30px; width: 2px;" class="vr"></div>
+                    <small class="display-6 text-muted">&nbsp;{{todoTasks.length}}</small>
+                </span>
+                <div class="todo-line"></div>
+                <br>
+            </div>
+            <div class="task-container p-2 mb-4">
+                <div *ngIf="todoTasks.length == 0" class="task p-4">
+                    <p class="lead">No Tasks</p>
+                </div>
+
+                <div *ngFor="let task of todoTasks" class="forloop">
+                    <div class="task px-2 py-2">
+                        <mat-card class="card">
+                            <mat-card-header>
+                                <mat-card-title-group>
+                                    <mat-card-title>
+                                        {{task.title}}
+                                    </mat-card-title>
+                                    <mat-card-subtitle>
+                                        <p class="small">{{task.taskId}}</p>
+                                        Assigned to {{task.developer.name}} ({{task.developer.email}})
+                                    </mat-card-subtitle>
+                                </mat-card-title-group>
+                            </mat-card-header>
+                            <mat-card-actions>
+                                <div class="px-2">
+                                    <div class="lastup-container d-flex align-items-start border rounded">
+                                        <mat-icon class="access-icon">calendar_today</mat-icon>
+                                        <span
+                                            style="font-size: 14px;padding-top: 2px;">{{task.deadline.substring(0,11)}}&nbsp;</span>
+                                    </div>
+                                </div>
+                                <button mat-button (click)="openDialogViewTask(task)">
+                                    <mat-icon>edit</mat-icon>Edit
+                                </button>
+                                <button *ngIf="userType!='DEV'" mat-button (click)="deleteConfirmDialog(task)">
+                                    <mat-icon>delete</mat-icon>Delete
+                                </button>
+                                <span class="spacer"></span>
+                                <div class="lastup-container d-flex align-items-start px-3">
+                                    <mat-icon class="access-icon">update</mat-icon>
+                                    <span style="font-size: 14px;padding-top: 2px;">{{task.lastUpdated}}</span>
+                                </div>
+                            </mat-card-actions>
+                            <mat-card-footer>
+                                <div *ngIf="task.priority == 'P2'" class="p2"></div>
+                                <div *ngIf="task.priority == 'P3'" class="p3"></div>
+                                <div *ngIf="task.priority == 'P1'" class="p1"></div>
+                            </mat-card-footer>
+                        </mat-card>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- inprogress tasks -->
+        <div class="col-lg-4">
+            <div class="list-header">
+                <span>
+                    <span class="display-6">In progress&nbsp;</span>
+                    <div style="height: 30px; width: 2px;" class="vr"></div>
+                    <span class="display-6 text-muted">&nbsp;{{inprogTasks.length}}</span>
+                </span>
+                <div class="inprogress-line"></div>
+                <br>
+            </div>
+            <div class="task-container p-2 mb-4">
+
+                <div *ngIf="inprogTasks.length == 0" class="task p-4">
+                    <p class="lead">No Tasks</p>
+                </div>
+
+                <div *ngFor="let task of inprogTasks" class="forloop">
+
+                    <div class="task px-2 py-2">
+                        <mat-card class="card">
+                            <mat-card-header>
+                                <mat-card-title-group>
+                                    <mat-card-title>
+                                        {{task.title}}
+                                    </mat-card-title>
+                                    <mat-card-subtitle>
+                                        <p class="small">{{task.taskId}}</p>
+                                        Assigned to {{task.developer.name}} ({{task.developer.email}})
+                                    </mat-card-subtitle>
+                                </mat-card-title-group>
+                            </mat-card-header>
+                            <mat-card-actions>
+                                <div class="px-2">
+                                    <div class="lastup-container d-flex align-items-start border rounded">
+                                        <mat-icon class="access-icon">calendar_today</mat-icon>
+                                        <span
+                                            style="font-size: 14px;padding-top: 2px;">{{task.deadline.substring(0,11)}}&nbsp;</span>
+                                    </div>
+                                </div>
+                                <button mat-button (click)="openDialogViewTask(task)">
+                                    <mat-icon>edit</mat-icon>Edit
+                                </button>
+                                <button *ngIf="userType!='DEV'" mat-button (click)="deleteConfirmDialog(task)">
+                                    <mat-icon>delete</mat-icon>Delete
+                                </button>
+                                <span class="spacer"></span>
+                                <div class="lastup-container d-flex align-items-start px-3">
+                                    <mat-icon class="access-icon">update</mat-icon>
+                                    <span style="font-size: 14px;padding-top: 2px;">{{task.lastUpdated}}</span>
+                                </div>
+                            </mat-card-actions>
+                            <mat-card-footer>
+                                <div *ngIf="task.priority == 'P2'" class="p2"></div>
+                                <div *ngIf="task.priority == 'P3'" class="p3"></div>
+                                <div *ngIf="task.priority == 'P1'" class="p1"></div>
+                            </mat-card-footer>
+                        </mat-card>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Done Tasks -->
+        <div class="col-lg-4">
+            <div class="list-header">
+                <span>
+                    <span class="display-6">Done&nbsp;</span>
+                    <div style="height: 30px; width: 2px;" class="vr"></div>
+                    <span class="display-6 text-muted">&nbsp;{{doneTasks.length}}</span>
+                </span>
+                <div class="done-line"></div>
+                <br>
+            </div>
+            <div class="task-container p-2 mb-4">
+                <div *ngIf="doneTasks.length == 0" class="task p-4">
+                    <p class="lead">No Tasks</p>
+                </div>
+                <div *ngFor="let task of doneTasks" class="forloop">
+                    <div class="task px-2 py-2">
+                        <mat-card class="card">
+                            <mat-card-header>
+                                <mat-card-title-group>
+                                    <mat-card-title>
+                                        {{task.title}}
+                                    </mat-card-title>
+                                    <mat-card-subtitle>
+                                        <p class="small">{{task.taskId}}</p>
+                                        Assigned to {{task.developer.name}} ({{task.developer.email}})
+                                    </mat-card-subtitle>
+                                </mat-card-title-group>
+                            </mat-card-header>
+                            <mat-card-actions>
+                                <div class="px-2">
+                                    <div class="lastup-container d-flex align-items-start border rounded">
+                                        <mat-icon class="access-icon">calendar_today</mat-icon>
+                                        <span
+                                            style="font-size: 14px;padding-top: 2px;">{{task.deadline.substring(0,11)}}&nbsp;</span>
+                                    </div>
+                                </div>
+                                <button mat-button (click)="openDialogViewTask(task)">
+                                    <mat-icon>edit</mat-icon>Edit
+                                </button>
+                                <button *ngIf="userType!='DEV'" mat-button (click)="deleteConfirmDialog(task)">
+                                    <mat-icon>delete</mat-icon>Delete
+                                </button>
+                                <span class="spacer"></span>
+                                <div class="lastup-container d-flex align-items-start px-3">
+                                    <mat-icon class="access-icon">update</mat-icon>
+                                    <span style="font-size: 14px;padding-top: 2px;">{{task.lastUpdated}}</span>
+                                </div>
+                            </mat-card-actions>
+                            <mat-card-footer>
+                                <div *ngIf="task.priority == 'P2'" class="p2"></div>
+                                <div *ngIf="task.priority == 'P3'" class="p3"></div>
+                                <div *ngIf="task.priority == 'P1'" class="p1"></div>
+                            </mat-card-footer>
+                        </mat-card>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+
+        </div>
+    </div>
+</div>

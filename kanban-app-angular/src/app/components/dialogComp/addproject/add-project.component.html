@@ -1,0 +1,34 @@
+<div class="p-5">
+    <form [formGroup]="addProjectForm" (ngSubmit)="addProject()">
+        <p class="display-6">Add Project</p>
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label>Title</mat-label>
+                <input formControlName="projectTitle" type="text" matInput [(ngModel)]="project.title">
+                <mat-error
+                    *ngIf="addProjectForm.get('taskTitle')?.errors && addProjectForm.get('taskTitle')?.touched">Title
+                    is
+                    required
+                </mat-error>
+            </mat-form-field>
+            <br>
+            <br>
+            <mat-form-field appearance="outline">
+                <mat-label>Description</mat-label>
+                <textarea formControlName="projectDescription" [(ngModel)]="project.description" matInput></textarea>
+                <mat-error
+                    *ngIf="addProjectForm.get('taskDescription')?.errors && addProjectForm.get('taskDescription')?.touched">Description
+                    is
+                    required
+                </mat-error>
+            </mat-form-field>
+
+        </div>
+        <div class="py-2"></div>
+        <button mat-raised-button type="submit" [disabled]="addProjectForm.invalid" color="primary"
+            class="px-5">Add</button>
+        <div class="py-2"></div>
+        <mat-error *ngIf="err">{{msg}}</mat-error>
+        <p *ngIf="noerr" class="text-success">{{msg}}</p>
+    </form>
+</div>

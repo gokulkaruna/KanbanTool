@@ -1,0 +1,58 @@
+.task-container {
+    background-color: aliceblue;
+    width: 100%;
+    border: 1px solid gainsboro;
+    border-radius: 8px;
+}
+
+.todo-line {
+    border: 2px solid orange;
+    color: coral;
+    border-radius: 10px;
+}
+
+.inprogress-line {
+    border: 2px solid yellow;
+    color: yellow;
+    border-radius: 10px;
+}
+
+.done-line {
+    border: 2px solid greenyellow;
+    color: greenyellow;
+    border-radius: 10px;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.title-card {
+    border: 0.5px solid gainsboro;
+    border-radius: 12px;
+}
+
+.access-icon {
+    transform: scale(0.65);
+}
+
+.p1 {
+    border: 3px solid red;
+
+}
+
+.p2 {
+    border: 3px solid orange;
+
+}
+
+.p3 {
+    border: 3px solid green;
+
+}
+
+
+.filter-card {
+    border: 0.5px solid white;
+    border-radius: 12px;
+}

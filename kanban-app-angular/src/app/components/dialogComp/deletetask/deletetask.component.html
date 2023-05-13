@@ -1,0 +1,14 @@
+<div class="p-4">
+    <h1 mat-dialog-title>Are you sure you want to delete?</h1>
+    <div mat-dialog-content>
+        <p class="lead">{{delTask.title}}</p>
+        <p class="small">{{delTask.taskId}}</p>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button mat-dialog-close>Close</button>
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        <button mat-raised-button (click)="deleteTask()" color="warn">Delete</button>
+    </div>
+</div>

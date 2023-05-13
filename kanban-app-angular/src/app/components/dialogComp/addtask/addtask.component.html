@@ -1,0 +1,138 @@
+<div class="p-5">
+    <div>
+
+        <form [formGroup]="addTaskForm" (ngSubmit)="isNotEditMode?addNewTask():updateTask()">
+            <p *ngIf="isNotEditMode" class="display-6">Add Task</p>
+            <p *ngIf="!isNotEditMode" class="display-6">Editing Task</p>
+            <p class="h5">Project: <span class="lead">{{project.title}}</span></p>
+            <p class="small h5">ID: <span class="small">{{project.id}}</span></p>
+            &nbsp;
+            <div>
+                <mat-form-field *ngIf="!isDev" appearance="outline">
+                    <mat-label>Title</mat-label>
+                    <input ng-readonly="isDev" formControlName="taskTitle" type="text" matInput
+                        [(ngModel)]="task.title">
+                    <mat-error
+                        *ngIf="addTaskForm.get('taskTitle')?.errors && addTaskForm.get('taskTitle')?.touched">Title
+                        is
+                        required
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field *ngIf="isDev" appearance="outline">
+                    <mat-label>Title</mat-label>
+                    <input [disabled]="isDev" matInput [value]="task.title" type="text">
+                </mat-form-field>
+
+                <br>
+                <br>
+                <mat-form-field *ngIf="!isDev" style="width:190px !important" appearance="outline">
+                    <!-- <mat-form-field appearance="outline"> -->
+                    <mat-label>Priority</mat-label>
+                    <mat-select ng-readonly="isDev" formControlName="taskPriority" [(ngModel)]="task.priority">
+                        <mat-option value="P1">P1</mat-option>
+                        <mat-option value="P2">P2</mat-option>
+                        <mat-option value="P3">P3</mat-option>
+                    </mat-select>
+                    <mat-error
+                        *ngIf="addTaskForm.get('taskPriority')?.errors && addTaskForm.get('taskPriority')?.touched">Priority
+                        is
+                        required
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field *ngIf="isDev" appearance="outline">
+                    <mat-label>Priority</mat-label>
+                    <input [disabled]="isDev" matInput [value]="task.priority" type="text">
+                </mat-form-field>
+                <span *ngIf="!isDev">
+                    &nbsp;
+                    &nbsp;
+                </span>
+
+                <mat-form-field style="width:190px !important" appearance="outline">
+                    <mat-label>Status</mat-label>
+                    <mat-select formControlName="taskStatus" [(ngModel)]="task.status">
+                        <mat-option value="TODO">TODO</mat-option>
+                        <mat-option value="INPROG">INPROGESS</mat-option>
+                        <mat-option value="DONE">DONE</mat-option>
+                    </mat-select>
+                    <mat-error
+                        *ngIf="addTaskForm.get('taskStatus')?.errors && addTaskForm.get('taskStatus')?.touched">Status
+                        is
+                        required
+                    </mat-error>
+                </mat-form-field>
+                &nbsp;
+                &nbsp;
+                <mat-form-field *ngIf="!isDev" style="width:280px !important" appearance="outline">
+                    <mat-label>Pick a deadline</mat-label>
+                    <input ng-readonly="isDev" matInput formControlName="taskDeadline" [(ngModel)]="task.deadline"
+                        [matDatepicker]="picker">
+                    <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error
+                        *ngIf="addTaskForm.get('taskDeadline')?.errors && addTaskForm.get('taskDeadline')?.touched">Deadline
+                        is
+                        required
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field *ngIf="isDev" appearance="outline">
+                    <mat-label>Deadline</mat-label>
+                    <input [disabled]="isDev" matInput [value]="task.deadline.substring(0,11)" type="text">
+                </mat-form-field>
+                &nbsp;
+                &nbsp;
+                <mat-form-field *ngIf="!isDev" style="width:305px !important" appearance="outline">
+                    <mat-label>Assign to</mat-label>
+                    <mat-select ng-readonly="isDev" formControlName="taskAssignee" [(ngModel)]="selectedDeveloper">
+                        <mat-option *ngFor="let dev of devList" [value]="dev.userId">{{dev.name}}-
+                            {{dev.email}}</mat-option>
+                    </mat-select>
+                    <mat-error
+                        *ngIf="addTaskForm.get('taskAssignee')?.errors && addTaskForm.get('taskAssignee')?.touched">Assignee
+                        required
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field *ngIf="isDev" appearance="outline">
+                    <mat-label>Asigned to</mat-label>
+                    <input [disabled]="isDev" matInput [value]="task.developer.name+ (task.developer.email)"
+                        type="text">
+                </mat-form-field>
+                <br>
+                <br>
+                <mat-form-field *ngIf="!isDev" appearance="outline">
+                    <mat-label>Description</mat-label>
+                    <textarea ng-readonly="isDev" formControlName="taskDescription" [(ngModel)]="task.description"
+                        matInput></textarea>
+                    <mat-error
+                        *ngIf="addTaskForm.get('taskDescription')?.errors && addTaskForm.get('taskDescription')?.touched">Description
+                        is
+                        required
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field *ngIf="isDev" appearance="outline">
+                    <mat-label>Description</mat-label>
+                    <textarea [disabled]="isDev" matInput [value]="task.description"></textarea>
+                </mat-form-field>
+
+            </div>
+            <div class="py-2"></div>
+            <button *ngIf="isNotEditMode" mat-raised-button type="submit" [disabled]="addTaskForm.invalid"
+                color="primary" class="px-5">Add</button>
+            <div *ngIf="!isNotEditMode && !isDev">
+                <button mat-raised-button type="submit" [disabled]="addTaskForm.invalid" color="primary"
+                    class="px-5">Update
+                    Changes</button>
+            </div>
+            <div *ngIf="!isNotEditMode && isDev">
+                <button mat-raised-button (click)="updateTaskDev()" color="primary" class="px-5">Update
+                    Changes</button>
+            </div>
+            <div class="py-2">
+                <br>
+            </div>
+            <p *ngIf="addnoerr" class="text-success">{{msg}}</p>
+            <mat-error *ngIf="adderr">{{msg}}</mat-error>
+        </form>
+    </div>
